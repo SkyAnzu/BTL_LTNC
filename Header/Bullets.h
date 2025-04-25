@@ -5,6 +5,7 @@
 #include <SDL_image.h>
 #include <string>
 #include <cmath> // For sin, cos
+#include <vector>
 
 class Bullet {
 public:
@@ -25,6 +26,9 @@ public:
 
     // getRect: Returns the bullet's bounding box (useful for collisions later)
     SDL_Rect getRect() const;
+
+    static void ShootToward(SDL_Renderer* renderer, std::vector<Bullet>& bullets, const std::string& texturePath,
+        SDL_Point origin, int mouseX, int mouseY, float speed);
 
 private:
     SDL_Renderer* renderer;

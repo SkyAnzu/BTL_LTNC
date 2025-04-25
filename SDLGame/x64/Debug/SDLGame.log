@@ -1,4 +1,4 @@
 ﻿  main.cpp
-D:\advProgram\SDLGame\main.cpp(27,32): warning C4566: character represented by universal-character-name '\u1EC3' cannot be represented in the current code page (1252)
-D:\advProgram\SDLGame\main.cpp(118,38): warning C4244: '=': conversion from 'Uint64' to 'Uint32', possible loss of data
+D:\advProgram\SDLGame\main.cpp(28,32): warning C4566: character represented by universal-character-name '\u1EC3' cannot be represented in the current code page (1252)
+D:\advProgram\SDLGame\main.cpp(127,38): warning C4244: '=': conversion from 'Uint64' to 'Uint32', possible loss of data
   SDLGame.vcxproj -> D:\advProgram\SDLGame\x64\Debug\SDLGame.exe

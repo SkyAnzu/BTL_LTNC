@@ -1,8 +1,9 @@
 ﻿#define SDL_MAIN_HANDLED
 #include <SDL.h>
 #include <SDL_image.h>
-#include <iostream>
+#include <iostream> 
 #include <string>
+#include <vector>
 #include "Header/Player.h"
 #include "Header/Bullets.h"
 
@@ -65,25 +66,22 @@ int main(int argc, char* argv[])
            if (e.type == SDL_QUIT) { quit = true; }
            if (e.type == SDL_MOUSEBUTTONDOWN) {
                if (e.button.button == SDL_BUTTON_LEFT && player.getCurrentState() != Player::STATE_DYING) {
-                   // Kiểm tra thời gian chờ bắn
                    if (currentTime >= lastShotTime + fireDelay) {
-                       // Lấy vị trí và góc từ Player
-                       SDL_Point spawnPos = player.getWeaponPivotScreenPosition(); // Lấy tọa độ pivot trên màn hình
-                       double spawnAngle = player.getWeaponAngle();             // Lấy góc cuối cùng của vũ khí
-
-                       // Tạo viên đạn mới và thêm vào vector
-                       bullets.emplace_back(renderer,
+                       SDL_GetMouseState(&mouseX, &mouseY);
+                       Bullet::ShootToward(
+                           renderer,
+                           bullets,
                            bulletTexturePath,
-                           static_cast<float>(spawnPos.x), // Chuyển sang float
-                           static_cast<float>(spawnPos.y), // Chuyển sang float
-                           static_cast<float>(spawnAngle), // Chuyển sang float
-                           bulletSpeed);
-
-                       lastShotTime = currentTime; // Cập nhật thời điểm bắn cuối
-                       // SDL_Log("Fired bullet from (%.1f, %.1f) at angle %.1f", (float)spawnPos.x, (float)spawnPos.y, (float)spawnAngle); // Log debug
+                           player.getWeaponPivotScreenPosition(),
+                           mouseX,
+                           mouseY,
+                           bulletSpeed
+                       );
+                       lastShotTime = currentTime;
                    }
                }
            }
+
         }
 
         SDL_GetMouseState(&mouseX, &mouseY); //lay toa do chuot
@@ -95,14 +93,25 @@ int main(int argc, char* argv[])
         // 3. Update
         player.update(mouseX, mouseY);
 
+        // 1. Cập nhật đạn bình thường
         for (auto& bullet : bullets) {
             bullet.update();
         }
+
+        // 2. Render đạn bình thường
+        for (auto& bullet : bullets) {
+            if (bullet.isActive()) {
+                bullet.render();
+            }
+        }
+
+        // 3. Xóa viên đạn inactive SAU render
         bullets.erase(
             std::remove_if(bullets.begin(), bullets.end(),
-                [](const Bullet& b) { return !b.isActive(); }), // Điều kiện xóa: đạn không active
+                [](const Bullet& b) { return !b.isActive(); }),
             bullets.end()
         );
+
 
         // 4. Render
         SDL_SetRenderDrawColor(renderer, 30, 30, 30, 255);

@@ -66,7 +66,7 @@ Player::Player(SDL_Renderer* renderer,
     }
     else {
         SDL_Log("Error: Failed to load idle texture '%s', cannot determine frame size.", idlePath.c_str());
-        frameWidth = 32; frameHeight = 32;
+        frameWidth = 114; frameHeight = 194;
         SDL_Log("Using fallback frame size: 32x32");
     }
     // kich thuoc vu khi
@@ -100,8 +100,8 @@ Player::Player(SDL_Renderer* renderer,
     // --- QUAN TRỌNG: Thiết lập Offset cho vũ khí ---
     // Đây là phần cần bạn TINH CHỈNH bằng cách thử nghiệm giá trị
     // Ví dụ: Đặt súng lệch về bên phải và hơi thấp xuống so với góc trên trái player
-    weaponOffsetX = frameWidth * 0.31; 
-    weaponOffsetY = frameHeight * 0.53;
+    weaponOffsetX = frameWidth * 0.01; 
+    weaponOffsetY = frameHeight * 0.63;
     SDL_Log("Initial Weapon Offset: X=%d, Y=%d", weaponOffsetX, weaponOffsetY);
 
     // Tính vị trí vẽ vũ khí ban đầu (sẽ cập nhật trong update)
@@ -312,24 +312,25 @@ void Player::setState(int newState) {
 
 // Hàm changeAnimation nhận int
 void Player::changeAnimation(int newState) {
-    SDL_Log("Changing player state from %d to %d", currentState, newState); // Log trực tiếp int
+    SDL_Log("Changing player state from %d to %d", currentState, newState);
     currentState = newState;
     currentFrame = 0;
     lastFrameTime = SDL_GetTicks();
 
-    // Sử dụng hằng số int trong switch
     switch (currentState) {
     case Player::STATE_IDLE:
         totalFrames = idleFrameCount;
-        // animationSpeed = 120;
         break;
     case Player::STATE_MOVING:
         totalFrames = moveFrameCount;
-        // animationSpeed = 80;
         break;
     case Player::STATE_DYING:
         totalFrames = deathFrameCount;
-        // animationSpeed = 150;
+        if (deathTexture) {
+            int totalWidth;
+            SDL_QueryTexture(deathTexture, NULL, NULL, &totalWidth, &frameHeight);
+            frameWidth = totalWidth / deathFrameCount;
+        }
         break;
     default:
         totalFrames = 1;
@@ -340,8 +341,12 @@ void Player::changeAnimation(int newState) {
     sourceRect.w = frameWidth;
     sourceRect.h = frameHeight;
 
+    // Cập nhật lại kích thước hiển thị theo frame mới
+    destRect.w = frameWidth;
+    destRect.h = frameHeight;
+
     if (totalFrames <= 0) {
-        SDL_Log("Warning: Total frames for state %d is %d. Forcing to 1.", currentState, totalFrames); // Log currentState trực tiếp
+        SDL_Log("Warning: Total frames for state %d is %d. Forcing to 1.", currentState, totalFrames);
         totalFrames = 1;
         currentFrame = 0;
         sourceRect.x = 0;

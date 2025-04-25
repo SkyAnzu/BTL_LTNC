@@ -1,8 +1,10 @@
 #include "Bullets.h"
+#include "Player.h"
 #include <SDL.h>
 #include <SDL_image.h>
 #include <iostream> // For SDL_Log / std::cout if needed
 #include <cmath>
+#include <vector>
 
 #ifndef M_PI
 #define M_PI 3.14159265358979323846
@@ -68,7 +70,7 @@ void Bullet::update() {
     const int SCREEN_WIDTH = 800;
     const int SCREEN_HEIGHT = 600;
     // Add a small buffer so bullets disappear slightly off-screen
-    const int BUFFER = width > height ? width : height; // Use largest dimension as buffer
+    const int BUFFER = std::max(width, height); // Use largest dimension as buffer
 
     if (x + width < -BUFFER || x > SCREEN_WIDTH + BUFFER || y + height < -BUFFER || y > SCREEN_HEIGHT + BUFFER) {
         active = false;
@@ -102,4 +104,24 @@ bool Bullet::isActive() const {
 // Returns the integer bounding box for potential collision detection
 SDL_Rect Bullet::getRect() const {
     return { static_cast<int>(x), static_cast<int>(y), width, height };
+}
+
+void Bullet::ShootToward(SDL_Renderer* renderer,
+    std::vector<Bullet>& bullets,
+    const std::string& texturePath,
+    SDL_Point origin,
+    int mouseX, int mouseY,
+    float speed)
+{
+    double dx = mouseX - origin.x;
+    double dy = mouseY - origin.y;
+    double angleRad = atan2(dy, dx);
+    double angleDeg = angleRad * 180.0 / M_PI;
+
+    float offset = 20.0f;
+    float spawnX = origin.x + cos(angleRad) * offset;
+    float spawnY = origin.y + sin(angleRad) * offset - 15.5;
+
+    bullets.emplace_back(renderer, texturePath, spawnX, spawnY, angleDeg, speed);
+
 }
