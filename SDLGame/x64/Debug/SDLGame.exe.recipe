@@ -1,0 +1,18 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project>
+  <ProjectOutputs>
+    <ProjectOutput>
+      <FullPath>D:\advProgram\SDLGame\x64\Debug\SDLGame.exe</FullPath>
+    </ProjectOutput>
+  </ProjectOutputs>
+  <ContentFiles>
+    <ContentFile>
+      <FullPath>D:\advProgram\SDLGame\assets\bg.jpg</FullPath>
+    </ContentFile>
+    <ContentFile>
+      <FullPath>D:\advProgram\SDLGame\assets\images\bg.jpg</FullPath>
+    </ContentFile>
+  </ContentFiles>
+  <SatelliteDlls />
+  <NonRecipeFileRefs />
+</Project>
