@@ -1,4 +1,10 @@
-﻿  main.cpp
+﻿  Bullets.cpp
+D:\advProgram\SDLGame\Src\Bullets.cpp(38,20): warning C4244: 'initializing': conversion from 'double' to 'float', possible loss of data
+D:\advProgram\SDLGame\Src\Bullets.cpp(113,20): warning C4244: 'initializing': conversion from 'double' to 'float', possible loss of data
+  main.cpp
 D:\advProgram\SDLGame\main.cpp(28,32): warning C4566: character represented by universal-character-name '\u1EC3' cannot be represented in the current code page (1252)
-D:\advProgram\SDLGame\main.cpp(127,38): warning C4244: '=': conversion from 'Uint64' to 'Uint32', possible loss of data
+D:\advProgram\SDLGame\main.cpp(79,38): warning C4244: 'initializing': conversion from 'double' to 'float', possible loss of data
+D:\advProgram\SDLGame\main.cpp(80,38): warning C4244: 'initializing': conversion from 'double' to 'float', possible loss of data
+D:\advProgram\SDLGame\main.cpp(121,38): warning C4244: '=': conversion from 'Uint64' to 'Uint32', possible loss of data
+  Generating Code...
   SDLGame.vcxproj -> D:\advProgram\SDLGame\x64\Debug\SDLGame.exe

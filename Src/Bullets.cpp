@@ -15,10 +15,11 @@ SDL_Texture* Bullet::loadTexture(const std::string& path) {
     if (!newTexture) {
         SDL_Log("Unable to load texture %s! SDL_image Error: %s", path.c_str(), IMG_GetError());
     }
-    else {
-        // SDL_Log("Bullet texture loaded successfully: %s", path.c_str()); // Optional log
-    }
     return newTexture;
+}
+
+Bullet::Bullet()
+    : renderer(nullptr), texture(nullptr), x(0), y(0), dx(0), dy(0), width(0), height(0), active(false), angle(0) {
 }
 
 Bullet::Bullet(SDL_Renderer* ren, const std::string& texturePath, float startX, float startY, float angleDeg, float spd)
@@ -27,26 +28,16 @@ Bullet::Bullet(SDL_Renderer* ren, const std::string& texturePath, float startX, 
     texture = loadTexture(texturePath);
     if (texture) {
         SDL_QueryTexture(texture, NULL, NULL, &width, &height);
-        // Center the bullet visually on the start point if you prefer the *center* of the bullet to be at startX, startY
-        // x -= width / 2.0f;
-        // y -= height / 2.0f;
-        // SDL_Log("Bullet dimensions: %d x %d", width, height); // Optional log
     }
     else {
-        // Fallback size if texture fails to load
-        width = 5; // Example fallback size
+        width = 5;
         height = 5;
         SDL_LogWarn(SDL_LOG_CATEGORY_APPLICATION, "Bullet texture '%s' failed to load. Using fallback size %dx%d.", texturePath.c_str(), width, height);
     }
 
-    // Convert angle from degrees to radians for trigonometric functions
     float angleRad = angleDeg * M_PI / 180.0f;
-
-    // Calculate velocity components based on angle and speed
     dx = cos(angleRad) * spd;
     dy = sin(angleRad) * spd;
-
-    // SDL_Log("Bullet created at (%.2f, %.2f) with angle %.2f deg, speed %.2f -> (dx=%.2f, dy=%.2f)", startX, startY, angleDeg, spd, dx, dy); // Optional log
 }
 
 Bullet::~Bullet() {
@@ -57,22 +48,15 @@ Bullet::~Bullet() {
 }
 
 void Bullet::update() {
-    if (!active) {
-        return;
-    }
+    if (!active) return;
 
-    // Move the bullet based on its velocity
     x += dx;
     y += dy;
 
-    // Deactivate bullet if it goes off-screen
-    // Adjust these boundaries if your screen size is different or you want bullets to persist longer off-screen
     const int SCREEN_WIDTH = 800;
     const int SCREEN_HEIGHT = 600;
-    // Add a small buffer so bullets disappear slightly off-screen
-    const int BUFFER = std::max(width, height); // Use largest dimension as buffer
 
-    if (x + width < -BUFFER || x > SCREEN_WIDTH + BUFFER || y + height < -BUFFER || y > SCREEN_HEIGHT + BUFFER) {
+    if (x + width < 0 || x > SCREEN_WIDTH || y + height < 0 || y > SCREEN_HEIGHT) {
         active = false;
     }
 }
@@ -106,22 +90,27 @@ SDL_Rect Bullet::getRect() const {
     return { static_cast<int>(x), static_cast<int>(y), width, height };
 }
 
-void Bullet::ShootToward(SDL_Renderer* renderer,
-    std::vector<Bullet>& bullets,
-    const std::string& texturePath,
-    SDL_Point origin,
-    int mouseX, int mouseY,
-    float speed)
-{
-    double dx = mouseX - origin.x;
-    double dy = mouseY - origin.y;
-    double angleRad = atan2(dy, dx);
-    double angleDeg = angleRad * 180.0 / M_PI;
+void Bullet::spawn(SDL_Renderer* ren, const std::string& texturePath, float startX, float startY, float angleDeg, float spd) {
+    renderer = ren;
+    if (texture) {
+        SDL_DestroyTexture(texture);
+        texture = nullptr;
+    }
+    texture = loadTexture(texturePath);
+    x = startX;
+    y = startY;
+    active = true;
+    angle = angleDeg;
 
-    float offset = 20.0f;
-    float spawnX = origin.x + cos(angleRad) * offset;
-    float spawnY = origin.y + sin(angleRad) * offset - 15.5;
+    if (texture) {
+        SDL_QueryTexture(texture, NULL, NULL, &width, &height);
+    }
+    else {
+        width = 5;
+        height = 5;
+    }
 
-    bullets.emplace_back(renderer, texturePath, spawnX, spawnY, angleDeg, speed);
-
+    float angleRad = angleDeg * M_PI / 180.0f;
+    dx = cos(angleRad) * spd;
+    dy = sin(angleRad) * spd;
 }

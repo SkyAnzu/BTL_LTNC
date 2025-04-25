@@ -9,6 +9,7 @@
 
 class Bullet {
 public:
+    Bullet();
     // Constructor: Takes renderer, texture path, starting position (float), angle (degrees), and speed
     Bullet(SDL_Renderer* renderer, const std::string& texturePath, float startX, float startY, float angleDeg, float speed);
 
@@ -27,8 +28,8 @@ public:
     // getRect: Returns the bullet's bounding box (useful for collisions later)
     SDL_Rect getRect() const;
 
-    static void ShootToward(SDL_Renderer* renderer, std::vector<Bullet>& bullets, const std::string& texturePath,
-        SDL_Point origin, int mouseX, int mouseY, float speed);
+    void spawn(SDL_Renderer* renderer, const std::string& texturePath, float startX, float startY, float angleDeg, float speed);
+
 
 private:
     SDL_Renderer* renderer;

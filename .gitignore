@@ -1,1 +1,26 @@
-".vs/" 
+# Visual Studio cache
+.vs/
+*.suo
+*.user
+*.userosscache
+*.sln.docstates
+
+# Build output
+x64/
+Debug/
+Release/
+*.obj
+*.exe
+*.dll
+*.pdb
+*.idb
+
+# CMake / SDL temp
+CMakeFiles/
+CMakeCache.txt
+*.log
+
+# Others
+*.VC.db
+*.ipch
+*.tlog

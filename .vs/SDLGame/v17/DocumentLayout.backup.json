@@ -3,16 +3,16 @@
   "WorkspaceRootPath": "D:\\advProgram\\SDLGame\\",
   "Documents": [
     {
-      "AbsoluteMoniker": "D:0:0:{7289169E-E40B-4CC9-97FA-2ADDAF08C9C1}|SDLGame.vcxproj|D:\\advProgram\\SDLGame\\main.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
-      "RelativeMoniker": "D:0:0:{7289169E-E40B-4CC9-97FA-2ADDAF08C9C1}|SDLGame.vcxproj|solutionrelative:main.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
+      "AbsoluteMoniker": "D:0:0:{7289169E-E40B-4CC9-97FA-2ADDAF08C9C1}|SDLGame.vcxproj|D:\\advProgram\\SDLGame\\Src\\Bullets.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
+      "RelativeMoniker": "D:0:0:{7289169E-E40B-4CC9-97FA-2ADDAF08C9C1}|SDLGame.vcxproj|solutionrelative:Src\\Bullets.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
     },
     {
       "AbsoluteMoniker": "D:0:0:{7289169E-E40B-4CC9-97FA-2ADDAF08C9C1}|SDLGame.vcxproj|D:\\advProgram\\SDLGame\\Header\\Bullets.h||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
       "RelativeMoniker": "D:0:0:{7289169E-E40B-4CC9-97FA-2ADDAF08C9C1}|SDLGame.vcxproj|solutionrelative:Header\\Bullets.h||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{7289169E-E40B-4CC9-97FA-2ADDAF08C9C1}|SDLGame.vcxproj|D:\\advProgram\\SDLGame\\Src\\Bullets.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
-      "RelativeMoniker": "D:0:0:{7289169E-E40B-4CC9-97FA-2ADDAF08C9C1}|SDLGame.vcxproj|solutionrelative:Src\\Bullets.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
+      "AbsoluteMoniker": "D:0:0:{7289169E-E40B-4CC9-97FA-2ADDAF08C9C1}|SDLGame.vcxproj|D:\\advProgram\\SDLGame\\main.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
+      "RelativeMoniker": "D:0:0:{7289169E-E40B-4CC9-97FA-2ADDAF08C9C1}|SDLGame.vcxproj|solutionrelative:main.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
     },
     {
       "AbsoluteMoniker": "D:0:0:{7289169E-E40B-4CC9-97FA-2ADDAF08C9C1}|SDLGame.vcxproj|D:\\advProgram\\SDLGame\\Src\\Player.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
@@ -30,7 +30,7 @@
       "DocumentGroups": [
         {
           "DockedWidth": 200,
-          "SelectedChildIndex": 3,
+          "SelectedChildIndex": 1,
           "Children": [
             {
               "$type": "Bookmark",
@@ -38,13 +38,13 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 2,
+              "DocumentIndex": 0,
               "Title": "Bullets.cpp",
               "DocumentMoniker": "D:\\advProgram\\SDLGame\\Src\\Bullets.cpp",
               "RelativeDocumentMoniker": "Src\\Bullets.cpp",
-              "ToolTip": "D:\\advProgram\\SDLGame\\Src\\Bullets.cpp",
-              "RelativeToolTip": "Src\\Bullets.cpp",
-              "ViewState": "AgIAAC0AAAAAAAAAAAAAAEgAAAAvAAAAAAAAAA==",
+              "ToolTip": "D:\\advProgram\\SDLGame\\Src\\Bullets.cpp*",
+              "RelativeToolTip": "Src\\Bullets.cpp*",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAABAAAAAFAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000677|",
               "WhenOpened": "2025-04-23T17:02:11.854Z",
               "EditorCaption": ""
@@ -55,22 +55,22 @@
               "Title": "Bullets.h",
               "DocumentMoniker": "D:\\advProgram\\SDLGame\\Header\\Bullets.h",
               "RelativeDocumentMoniker": "Header\\Bullets.h",
-              "ToolTip": "D:\\advProgram\\SDLGame\\Header\\Bullets.h",
-              "RelativeToolTip": "Header\\Bullets.h",
-              "ViewState": "AgIAAA8AAAAAAAAAAAAAAAcAAAARAAAAAAAAAA==",
+              "ToolTip": "D:\\advProgram\\SDLGame\\Header\\Bullets.h*",
+              "RelativeToolTip": "Header\\Bullets.h*",
+              "ViewState": "AgIAAA8AAAAAAAAAAAAAAB0AAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000680|",
               "WhenOpened": "2025-04-23T16:58:06.064Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 0,
+              "DocumentIndex": 2,
               "Title": "main.cpp",
               "DocumentMoniker": "D:\\advProgram\\SDLGame\\main.cpp",
               "RelativeDocumentMoniker": "main.cpp",
               "ToolTip": "D:\\advProgram\\SDLGame\\main.cpp*",
               "RelativeToolTip": "main.cpp*",
-              "ViewState": "AgIAAFQAAAAAAAAAAAAAAHEAAAAAAAAAAAAAAA==",
+              "ViewState": "AgIAAGYAAAAAAAAAAAAAAH4AAAAoAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000677|",
               "WhenOpened": "2025-04-11T13:57:10.641Z",
               "EditorCaption": ""
@@ -85,8 +85,7 @@
               "RelativeToolTip": "Src\\Player.cpp",
               "ViewState": "AgIAAEABAAAAAAAAAAAowFEBAAAFAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000677|",
-              "WhenOpened": "2025-04-11T13:56:57.312Z",
-              "EditorCaption": ""
+              "WhenOpened": "2025-04-11T13:56:57.312Z"
             },
             {
               "$type": "Document",
