@@ -1,4 +1,5 @@
 ﻿#include "Player.h"
+#include "Enemies.h"
 #include <iostream>
 #include <cmath>
 
@@ -59,32 +60,25 @@ Player::Player(SDL_Renderer* renderer,
             frameWidth = totalWidth / idleFrameCount;
         }
         else {
-            SDL_Log("Error: Idle frame count is zero!");
+            SDL_Log("Error: Idle frame count = 0");
             frameWidth = 0;
         }
-        SDL_Log("Frame dimensions determined: %d x %d", frameWidth, frameHeight);
     }
     else {
-        SDL_Log("Error: Failed to load idle texture '%s', cannot determine frame size.", idlePath.c_str());
+        SDL_Log("Error: Failed to load idle texture '%s'", idlePath.c_str());
         frameWidth = 114; frameHeight = 194;
-        SDL_Log("Using fallback frame size: 32x32");
     }
     // kich thuoc vu khi
     if (weaponTextureRight) {
         SDL_QueryTexture(weaponTextureRight, NULL, NULL, &weaponWidth, &weaponHeight);
-        SDL_Log("Weapon dimensions determined: %d x %d", weaponWidth, weaponHeight);
-        weaponSourceRect = { 0, 0, weaponWidth, weaponHeight }; // Giả sử vũ khí là 1 ảnh tĩnh
-        // --- QUAN TRỌNG: Đặt điểm xoay (Pivot) cho vũ khí ---
-        // Đây là tọa độ X, Y *bên trong* ảnh vũ khí (từ góc trên trái)
-        // mà bạn muốn súng xoay quanh (ví dụ: phần tay cầm)
-        // Cần TINH CHỈNH giá trị này!
+        weaponSourceRect = { 0, 0, weaponWidth, weaponHeight };
+        //tim diem pivot so voi frame weapon
         weaponPivot.x = weaponWidth * 0.47;
         weaponPivot.y = weaponHeight * 0.78;
-        SDL_Log("Weapon Pivot set to: X=%d, Y=%d", weaponPivot.x, weaponPivot.y);
     }
     else {
         SDL_Log("Error: Failed to load weapon texture '%s'", weaponRightPath.c_str());
-        weaponWidth = 0; weaponHeight = 0; // Hoặc đặt kích thước mặc định nhỏ
+        weaponWidth = 0; weaponHeight = 0;
     }
 
     destRect.w = frameWidth;
@@ -97,14 +91,11 @@ Player::Player(SDL_Renderer* renderer,
     sourceRect.w = frameWidth;
     sourceRect.h = frameHeight;
 
-    // --- QUAN TRỌNG: Thiết lập Offset cho vũ khí ---
-    // Đây là phần cần bạn TINH CHỈNH bằng cách thử nghiệm giá trị
-    // Ví dụ: Đặt súng lệch về bên phải và hơi thấp xuống so với góc trên trái player
+    //dat vu khi len player
     weaponOffsetX = frameWidth * 0.01; 
     weaponOffsetY = frameHeight * 0.63;
-    SDL_Log("Initial Weapon Offset: X=%d, Y=%d", weaponOffsetX, weaponOffsetY);
 
-    // Tính vị trí vẽ vũ khí ban đầu (sẽ cập nhật trong update)
+    //tính vị trí vẽ vũ khí ban đầu
     weaponDestRect.w = weaponWidth;
     weaponDestRect.h = weaponHeight;
     weaponDestRect.x = destRect.x + weaponOffsetX;
@@ -125,7 +116,6 @@ Player::~Player() {
 }
 
 void Player::handleInput(const Uint8* keystate) {
-    // Sử dụng hằng số int để kiểm tra state
     if (currentState == Player::STATE_DYING) {
         return;
     }
@@ -134,37 +124,38 @@ void Player::handleInput(const Uint8* keystate) {
     int dx = 0;
     int dy = 0;
 
-    if (keystate[SDL_SCANCODE_W]) { dy -= speed; isMoving = true; }
-    if (keystate[SDL_SCANCODE_S]) { dy += speed; isMoving = true; }
-    if (keystate[SDL_SCANCODE_A]) { dx -= speed; isMoving = true; }
-    if (keystate[SDL_SCANCODE_D]) { dx += speed; isMoving = true; }
+    if (keystate[SDL_SCANCODE_W]) {
+        dy -= speed; isMoving = true;
+    }
+    if (keystate[SDL_SCANCODE_S]) {
+        dy += speed; isMoving = true;
+    }
+    if (keystate[SDL_SCANCODE_A]) {
+        dx -= speed; isMoving = true;
+    }
+    if (keystate[SDL_SCANCODE_D]) {
+        dx += speed; isMoving = true;
+    }
 
     destRect.x += dx;
     destRect.y += dy;
 
-    // Giới hạn màn hình
+    //giới hạn màn hình
     if (destRect.x < 0) destRect.x = 0;
     if (destRect.y < 0) destRect.y = 0;
     if (destRect.x + frameWidth > 800) destRect.x = 800 - frameWidth;
     if (destRect.y + frameHeight > 600) destRect.y = 600 - frameHeight;
 
-    // Thay đổi trạng thái dựa trên input (sử dụng hằng số int)
     if (isMoving && currentState != Player::STATE_MOVING) {
         setState(Player::STATE_MOVING);
     }
     else if (!isMoving && currentState == Player::STATE_MOVING) {
         setState(Player::STATE_IDLE);
     }
-
-    // Test trạng thái DYING (nhấn K)
-    if (keystate[SDL_SCANCODE_K] && currentState != Player::STATE_DYING) {
-        setState(Player::STATE_DYING);
-    }
 }
 
 void Player::update(int mouseX, int mouseY) {
-    // 1. Cập nhật animation Player (như cũ)
-    if (totalFrames > 1) { // Chỉ chạy animation nếu có nhiều hơn 1 frame
+    if (totalFrames > 1) {
         Uint32 currentTime = SDL_GetTicks();
         if (currentTime > lastFrameTime + animationSpeed) {
             currentFrame++;
@@ -180,40 +171,34 @@ void Player::update(int mouseX, int mouseY) {
             sourceRect.x = currentFrame * frameWidth;
         }
     }
-    else { // Nếu chỉ có 1 frame thì đặt về 0
+    else {
         sourceRect.x = 0;
         currentFrame = 0;
     }
-    // 2. Xác định trạng thái Flip cho Player
     int playerCenterX = destRect.x + frameWidth / 2;
     flipState = (mouseX < playerCenterX) ? SDL_FLIP_HORIZONTAL : SDL_FLIP_NONE;
 
-    // 3. Cập nhật vị trí Vũ khí DỰA TRÊN FLIP STATE CỦA PLAYER
-    currentPivotToUse = weaponPivot;      // Bắt đầu với pivot gốc
-    currentAngleToUse = currentWeaponAngle; // Bắt đầu với góc gốc
-    if (flipState == SDL_FLIP_HORIZONTAL) { // Player lật trái
+    currentPivotToUse = weaponPivot;
+    currentAngleToUse = currentWeaponAngle;
+    if (flipState == SDL_FLIP_HORIZONTAL) {
         weaponDestRect.x = destRect.x + frameWidth - weaponOffsetX - weaponWidth;
-        //currentPivotToUse.x = weaponWidth - weaponPivot.x;
-        //currentAngleToUse = fmod(180.0 + currentWeaponAngle, 360.0);
     }
-    else { // Player không lật (nhìn phải)
+    else {
         weaponDestRect.x = destRect.x + weaponOffsetX;
-
     }
-    weaponDestRect.y = destRect.y + weaponOffsetY; // Y không đổi
+    weaponDestRect.y = destRect.y + weaponOffsetY;
 
-    // 4. Tính toán góc xoay Vũ khí TỪ TÂM PLAYER (luôn tính góc tuyệt đối)
-    // Chỉ tính nếu có texture vũ khí (ít nhất là cái bên phải làm chuẩn)
+    //tính góc xoay
     if (weaponTextureRight) {
-        double playerCenterX_ForAngle = static_cast<double>(destRect.x) + frameWidth / 2.0;
-        double playerCenterY_ForAngle = static_cast<double>(destRect.y) + frameHeight / 2.0;
-        double deltaX = static_cast<double>(mouseX) - playerCenterX_ForAngle;
-        double deltaY = static_cast<double>(mouseY) - playerCenterY_ForAngle;
+        double gocPlayerCenterX = static_cast<double>(destRect.x) + frameWidth / 2.0;
+        double gocPlayerCenterY = static_cast<double>(destRect.y) + frameHeight / 2.0;
+        double deltaX = static_cast<double>(mouseX) - gocPlayerCenterX;
+        double deltaY = static_cast<double>(mouseY) - gocPlayerCenterY;
         double angleRadians = atan2(deltaY, deltaX);
         weaponAngle = angleRadians * 180.0 / M_PI;
     }
     else {
-        weaponAngle = 0.0; // Không xoay nếu không có vũ khí
+        weaponAngle = 0.0;
     }
     currentWeaponPivotScreen.x = weaponDestRect.x + currentPivotToUse.x;
     currentWeaponPivotScreen.y = weaponDestRect.y + currentPivotToUse.y;
@@ -222,8 +207,6 @@ void Player::update(int mouseX, int mouseY) {
 
 void Player::render() {
     SDL_Texture* currentTexture = nullptr;
-
-    // Sử dụng hằng số int trong switch
     switch (currentState) {
     case Player::STATE_IDLE:
         currentTexture = idleTexture;
@@ -234,83 +217,40 @@ void Player::render() {
     case Player::STATE_DYING:
         currentTexture = deathTexture;
         break;
-    default: // Fallback an toàn
+    default:
         currentTexture = idleTexture;
         break;
     }
 
     if (currentTexture && frameWidth > 0 && frameHeight > 0) {
-        int texW, texH;
-        SDL_QueryTexture(currentTexture, NULL, NULL, &texW, &texH);
-        if (sourceRect.x + sourceRect.w > texW) {
-            SDL_Log("Warning: sourceRect.x (%d + %d) exceeds texture width (%d) for state %d. Clamping.",
-                sourceRect.x, sourceRect.w, texW, currentState); // Log currentState trực tiếp
-            sourceRect.x = texW - sourceRect.w;
-            if (sourceRect.x < 0) sourceRect.x = 0;
-        }
-        //SDL_RenderCopy(renderer, currentTexture, &sourceRect, &destRect);
-        SDL_RenderCopyEx(renderer,
-            currentTexture,
-            &sourceRect,        // Frame nguồn
-            &destRect,          // Vị trí đích
-            0.0,                // Góc xoay Player (0 nếu không xoay)
-            NULL,               // Điểm xoay Player (NULL là tâm)
-            flipState);         // <-- Áp dụng trạng thái lật
-    }
-    else {
-        SDL_SetRenderDrawColor(renderer, 255, 0, 0, 255);
-        SDL_RenderFillRect(renderer, &destRect);
-        if (frameWidth <= 0 || frameHeight <= 0) {
-            SDL_Log("Error rendering Player: Invalid frame dimensions (%d x %d)", frameWidth, frameHeight);
-        }
-        else if (!currentTexture) {
-            SDL_Log("Error rendering Player: Current texture is null for state %d", currentState); // Log currentState trực tiếp
-        }
+        SDL_RenderCopyEx(renderer, currentTexture, &sourceRect, &destRect, 0.0, NULL, flipState);
     }
 
-    // 3. Chọn Texture Vũ khí phù hợp
     SDL_Texture* currentWeaponTexture = nullptr;
     SDL_Point pivotToUse = weaponPivot;
     double angleToUse = weaponAngle;
 
-    if (flipState == SDL_FLIP_HORIZONTAL) { // Player lật trái
-        currentWeaponTexture = weaponTextureLeft;  // Dùng ảnh vũ khí trái
+    if (flipState == SDL_FLIP_HORIZONTAL) {
+        currentWeaponTexture = weaponTextureLeft;
         pivotToUse.x = weaponWidth - weaponPivot.x;
         angleToUse = - (180.0 - weaponAngle);
     }
-    else { // Player nhìn phải
-        currentWeaponTexture = weaponTextureRight; // Dùng ảnh vũ khí phải
+    else {
+        currentWeaponTexture = weaponTextureRight;
     }
 
-    // 4. Vẽ Vũ khí đã chọn (KHÔNG FLIP, dùng PIVOT GỐC)
     if (currentWeaponTexture && weaponWidth > 0 && weaponHeight > 0) {
-        SDL_RenderCopyEx(renderer,
-            currentWeaponTexture, // <-- Texture đã đúng hướng
-            &weaponSourceRect,    // Source rect
-            &weaponDestRect,      // Vị trí đích đã tính
-            angleToUse,          // Góc tuyệt đối
-            &pivotToUse,         // <-- Pivot gốc (không cần điều chỉnh)
-            SDL_FLIP_NONE);       // <-- Luôn là NONE cho vũ khí
+        SDL_RenderCopyEx(renderer, currentWeaponTexture, &weaponSourceRect, &weaponDestRect, angleToUse, &pivotToUse, SDL_FLIP_NONE);
     }
 }
 
 
-
-// Hàm setState nhận int
 void Player::setState(int newState) {
-    // Kiểm tra xem state có hợp lệ không (tùy chọn nhưng nên làm)
-    if (newState < Player::STATE_IDLE || newState > Player::STATE_DYING) { // Giả sử DYING là state lớn nhất
-        SDL_Log("Warning: Attempted to set invalid player state: %d", newState);
-        return;
-    }
-
-    if (currentState != newState /*&& currentState != Player::STATE_DYING*/) {
+    if (currentState != newState) {
         changeAnimation(newState);
     }
 }
 
-
-// Hàm changeAnimation nhận int
 void Player::changeAnimation(int newState) {
     SDL_Log("Changing player state from %d to %d", currentState, newState);
     currentState = newState;
@@ -326,6 +266,7 @@ void Player::changeAnimation(int newState) {
         break;
     case Player::STATE_DYING:
         totalFrames = deathFrameCount;
+        // kích thước spritesheet khác
         if (deathTexture) {
             int totalWidth;
             SDL_QueryTexture(deathTexture, NULL, NULL, &totalWidth, &frameHeight);
@@ -341,27 +282,31 @@ void Player::changeAnimation(int newState) {
     sourceRect.w = frameWidth;
     sourceRect.h = frameHeight;
 
-    // Cập nhật lại kích thước hiển thị theo frame mới
     destRect.w = frameWidth;
     destRect.h = frameHeight;
-
-    if (totalFrames <= 0) {
-        SDL_Log("Warning: Total frames for state %d is %d. Forcing to 1.", currentState, totalFrames);
-        totalFrames = 1;
-        currentFrame = 0;
-        sourceRect.x = 0;
-    }
 }
 
-// Lấy vị trí điểm xoay (pivot) của vũ khí trên màn hình
 SDL_Point Player::getWeaponPivotScreenPosition() const {
-    // Trả về giá trị đã được tính toán và lưu trữ trong hàm update()
     return currentWeaponPivotScreen;
 }
 
-// Lấy góc cuối cùng của vũ khí (đã điều chỉnh theo flip)
 double Player::getWeaponAngle() const {
-    // Trả về góc đã được tính toán và lưu trữ trong hàm update()
-    // Góc này phù hợp để tạo đạn theo hướng nhìn của vũ khí
     return currentAngleToUse;
+}
+
+void Player::checkCollisionWithEnemies(const Enemy* enemies, int enemyCount) {
+    if (currentState == STATE_DYING) return;
+
+    SDL_Rect playerRect = getPositionRect();
+
+    for (int i = 0; i < enemyCount; ++i) {
+        if (!enemies[i].isActive()) continue;
+
+        SDL_Rect enemyRect = enemies[i].getRect();
+
+        if (SDL_HasIntersection(&playerRect, &enemyRect)) {
+            setState(STATE_DYING);
+            break;
+        }
+    }
 }

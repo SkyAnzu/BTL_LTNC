@@ -24,12 +24,24 @@
     <ClCompile Include="Src\Bullets.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="Src\Enemies.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Src\endMenu.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Header\Player.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Header\Bullets.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Header\Enemies.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Header\endMenu.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

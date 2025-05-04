@@ -135,10 +135,14 @@
   <ItemGroup>
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Src\Bullets.cpp" />
+    <ClCompile Include="Src\endMenu.cpp" />
+    <ClCompile Include="Src\Enemies.cpp" />
     <ClCompile Include="Src\Player.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Header\Bullets.h" />
+    <ClInclude Include="Header\endMenu.h" />
+    <ClInclude Include="Header\Enemies.h" />
     <ClInclude Include="Header\Player.h" />
   </ItemGroup>
   <ItemGroup>
